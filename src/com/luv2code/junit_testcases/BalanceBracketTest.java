@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.luv2code.common.BalancedBrackets;
 
-public class BalancedBracketsUsingStringTest {
+public class BalanceBracketTest {
   private BalancedBrackets balancedBracketsUsingString;
 
   @Before
