@@ -15,7 +15,7 @@ public class DynamicCssTest {
   @Before
   public void setup() {
     READ_CSS_PATH = "src/assets/read.css";
-    WRITE_CSS_PATH = "src/assets/write1.css";
+    WRITE_CSS_PATH = "src/assets/write.css";
     classInstance = new DynamicCss(READ_CSS_PATH, WRITE_CSS_PATH);
   }
 
