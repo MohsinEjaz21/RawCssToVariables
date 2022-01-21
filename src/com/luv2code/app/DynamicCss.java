@@ -11,9 +11,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.luv2code.common.BalancedBrackets;
 import com.luv2code.common.Constants;
 import com.luv2code.common.RegexUtils;
 import static com.luv2code.common.Utils.*;
+import static com.luv2code.common.BalancedBrackets.*;
 import com.sun.prism.paint.Color;
 import javafx.scene.shape.Line;
 
@@ -55,7 +57,7 @@ public class DynamicCss {
     DynamicCss classInstance = new DynamicCss();
     classInstance.readRawCss();
     classInstance.writeCleanDynamicCss();
-    System.out.print("I AM DONE");
+    System.out.print("I AM DONE 2");
   }
 
   public void readRawCss() {
@@ -96,6 +98,7 @@ public class DynamicCss {
         currentLine = currentLine.replace(colorFoundInText, wrapColorKeyWithVar(allColors.get(colorFoundInText)));
         currentLine = fixMissingBracket(currentLine,lineBeforeRawCssChange);
         currentLine = addMissingColon(currentLine);
+        System.out.print("CurrentLine"+currentLine);
       }
       newCssBuilder.append(currentLine);
       newCssBuilder.append(LINE_BREAK);
@@ -107,6 +110,11 @@ public class DynamicCss {
     for (Entry<String, String> colorEntry : allColors.entrySet()) {
       String value = colorEntry.getKey().replace(";", "").trim();
       String key = colorEntry.getValue().replace(";", "").trim();
+//      System.out.println("value --- "+value);
+      if(value.startsWith("rgba") && value.endsWith(")") &&  !isBracketBalanced(value) ) {
+        value=value.substring(0 , value.length()-2);
+      }
+      
       newCssBuilder.insert(0, key + " :" + value + ";" + LINE_BREAK);
     }
     newCssBuilder.insert(0, ":root{" + LINE_BREAK);

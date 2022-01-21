@@ -25,5 +25,7 @@ public class RegexTest {
     System.out.println(regexColor.findColorInText("color: #fff !important;"));
     System.out.println(regexColor.findColorInText("--color_7: rgba(120, 130, 140, .13);"));
   }
-  
+
+
+
 }

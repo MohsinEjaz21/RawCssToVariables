@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.luv2code.app.DynamicCss;
-import com.luv2code.common.BalancedBracketsUsingString;
+import com.luv2code.common.BalancedBrackets;
 
 public class DynamicCssTest {
   DynamicCss classInstance;
