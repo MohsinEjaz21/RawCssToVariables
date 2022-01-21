@@ -10,16 +10,21 @@ package com.luv2code.common;
       boolean isWhite =cssLine.indexOf("white")> 0;
       boolean isBlack =cssLine.indexOf("black")> 0;
       boolean isHexColor =cssLine.indexOf("#")> 0;
+      boolean isContainsUrl =cssLine.indexOf("url")> -1;
       boolean isRgb =cssLine.indexOf("rgb")> 0;
             
+      if(isContainsUrl||!isNoBrace) {
+        return null;
+      }
+      
       if(isRgb) {
         foundRgbColor =  cssLine.substring(cssLine.indexOf("rgb"));
-      }else if(isNoBrace && isHexColor) {
+      }else if(isHexColor) {
         foundRgbColor =  cssLine.substring(cssLine.indexOf("#"));
       }
-      else if(isNoBrace && isWhite) {
+      else if(isWhite) {
         foundRgbColor =  "white";
-      }else if(isNoBrace && isBlack) {
+      }else if(isBlack) {
         foundRgbColor =  "black";
       }
       

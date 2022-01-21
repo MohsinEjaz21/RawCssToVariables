@@ -12,7 +12,7 @@
 --color_10 :#fff6;
 --color_12 :#b9b9b9;
 --color_14 :#0003, 0 17px 26px 2px #00000024, 0 6px 32px 5px #0000001f;
---color_13 :rgba(0, 0, 0, .7), rgba(0, 0, 0, .7) 2px, transparent 0, transparent);
+--color_13 :rgba(0, 0, 0, .7), rgba(0, 0, 0, .7) 2px, transparent 0, transparent;
 --color_15 :#26c6da;
 --color_16 :#0003, 0 16px 24px 2px #00000024, 0 6px 30px 5px #0000001f;
 --color_17 :#009688;
@@ -37,7 +37,7 @@
 --color_36 :#bbdefb4d;
 --color_35 :#007bff40;
 --color_39 :#00000042;
---color_38 :rgba(30, 136, 229, .2) 50%, rgba(249, 171, 0, .2) 50%);
+--color_38 :rgba(30, 136, 229, .2) 50%, rgba(249, 171, 0, .2) 50%;
 --color_40 :#e8fdf8;
 --color_41 :#00000061;
 --color_42 :#ebf3f5;
@@ -78,7 +78,7 @@
 --color_75 :#eef5f9;
 --color_78 :#ffffff;
 --color_79 :#e91e6333;
---color_80 :rgba(233, 30, 99, .2) 50%, rgba(249, 171, 0, .2) 50%);
+--color_80 :rgba(233, 30, 99, .2) 50%, rgba(249, 171, 0, .2) 50%;
 --color_81 :#ffb22b;
 --color_82 :#0000006b;
 --color_84 :#0003, 0 4px 5px #00000024, 0 1px 10px #0000001f;
@@ -113,7 +113,7 @@
 --color_113 :#000;
 --color_112 :#fb3a3a;
 --color_114 :#0000000f;
---color_115 :rgba(0, 0, 0, .42) 0%, rgba(0, 0, 0, .42) 33%, transparent 0%);
+--color_115 :rgba(0, 0, 0, .42) 0%, rgba(0, 0, 0, .42) 33%, transparent 0%;
 --color_117 :#0000000a;
 --color_116 :#313131;
 --color_118 :#0000000d;
@@ -134,7 +134,7 @@
 --color_134 :rgba(0, 0, 0, .12);
 --color_133 :#1e88e58a;
 --color_135 :#b0b0b0;
---color_136 :rgba(63, 81, 181, .2) 50%, rgba(249, 171, 0, .2) 50%);
+--color_136 :rgba(63, 81, 181, .2) 50%, rgba(249, 171, 0, .2) 50%;
 --color_138 :#999;
 --color_137 :#fff8ec;
 }
