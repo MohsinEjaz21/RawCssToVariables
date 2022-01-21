@@ -1,24 +1,31 @@
 package com.luv2code.junit_testcases;
 
-import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.luv2code.app.DynamicCss;
+import com.luv2code.common.BalancedBracketsUsingString;
 
-class DynamicCssTest {
+public class DynamicCssTest {
+  DynamicCss classInstance;
+  String READ_CSS_PATH;
+  String WRITE_CSS_PATH;
+  
+  @Before
+  public void setup() {
+    READ_CSS_PATH = "src/assets/read.css";
+    WRITE_CSS_PATH = "src/assets/write1.css";
+    classInstance = new DynamicCss(READ_CSS_PATH, WRITE_CSS_PATH);
+  }
 
+  
   @Test
-  void test() {
-    String READ_CSS_PATH = "src/assets/read.css";
-    String WRITE_CSS_PATH = "src/assets/write1.css";
-    DynamicCss classInstance = new DynamicCss(READ_CSS_PATH, WRITE_CSS_PATH);
-    System.out.println(DynamicCss.READ_CSS_PATH);
-    System.out.println(DynamicCss.WRITE_CSS_PATH);
-
+  public void test() {
     classInstance.readRawCss();
     classInstance.writeCleanDynamicCss();
     System.out.print("I AM DONE");
   }
 
 }
+ 

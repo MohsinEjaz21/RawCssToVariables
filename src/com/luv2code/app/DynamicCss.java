@@ -13,9 +13,8 @@ import java.util.Map.Entry;
 
 import com.luv2code.common.Constants;
 import com.luv2code.common.RegexUtils;
-import com.luv2code.common.Utils;
+import static com.luv2code.common.Utils.*;
 import com.sun.prism.paint.Color;
-
 import javafx.scene.shape.Line;
 
 public class DynamicCss {
@@ -57,7 +56,6 @@ public class DynamicCss {
     classInstance.readRawCss();
     classInstance.writeCleanDynamicCss();
     System.out.print("I AM DONE");
-
   }
 
   public void readRawCss() {
@@ -93,7 +91,7 @@ public class DynamicCss {
       String colorFoundInText = RegexUtils.findColorInText(currentLine);
       addMissingColor(colorFoundInText);
 
-      if (!Utils.isNull(colorFoundInText) && !Utils.isNull(allColors.get(colorFoundInText))) {
+      if (!isNull(colorFoundInText) && isNull(allColors.get(colorFoundInText))) {
         String lineBeforeRawCssChange = currentLine;
         currentLine = currentLine.replace(colorFoundInText, wrapColorKeyWithVar(allColors.get(colorFoundInText)));
         currentLine = fixMissingBracket(currentLine,lineBeforeRawCssChange);
@@ -125,7 +123,7 @@ public class DynamicCss {
   }
   
   public void addMissingColor(String colorFoundInText) {
-    if (!Utils.isNull(colorFoundInText) && Utils.isNull(allColors.get(colorFoundInText))) {
+    if (!isNull(colorFoundInText) && isNull(allColors.get(colorFoundInText))) {
       allColors.put(colorFoundInText, COLOR_PREFIX + NEW_COLOR_INDEX);
       NEW_COLOR_INDEX++;
     }
