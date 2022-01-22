@@ -4,8 +4,12 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import com.luv2code.common.Constants;
@@ -113,15 +117,21 @@ public class DynamicCss {
 
   public void appendVarToNewCss() {
     tempVarColorsBuffer.append(":root{" + LINE_BREAK);
+    
+    List<CssModel> cssVarsObjList = new ArrayList<CssModel>(allColors.values());
+    
+    Collections.sort(cssVarsObjList, new Comparator<CssModel>() {
+      @Override
+      public int compare(CssModel u1, CssModel u2) {
+        return u2.getColorCount() - u1.getColorCount();
+      }
+    });
+        
 
-    for (Entry<String, CssModel> colorEntry : allColors.entrySet()) {
+    for (CssModel currCssModel : cssVarsObjList) {
       
-      CssModel currCssModel = colorEntry.getValue();
       String key = currCssModel.getColorKey().replace(";", "").trim();
       String value = currCssModel.getColorValue().replace(";", "").trim();
-      
-      
-      
       // System.out.println("value --- "+value);
       if (value.startsWith("rgba") && value.endsWith(")") && !isBracketBalanced(value)) {
         value = value.substring(0, value.length() - 2);
