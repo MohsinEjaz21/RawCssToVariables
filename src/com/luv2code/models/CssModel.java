@@ -59,14 +59,15 @@ public class CssModel {
   }
 
   public void incColorCount(int count) {
-    this.colorCount = count++;
+    this.colorCount = count+=1;
   }
 
   
   @Override
   public String toString() {
-    return colorKey+ ":"+ colorValue;
+    return colorKey+ ":"+ colorValue + "/* "+colorCount+" */";
   }
+  
   
   
   

@@ -162,8 +162,6 @@ public class DynamicCss {
     }
   }
 
-  
-
   public String addMissingColon(String currentLine) {
     return currentLine = currentLine.indexOf(";") > -1 ? currentLine : currentLine + ";";
   }
