@@ -101,7 +101,6 @@ public class DynamicCss {
 
         String lineBeforeRawCssChange = currentLine;
         String colorKey = allColors.get(colorFoundInText).getColorKey();
-
         currentLine = currentLine.replace(colorFoundInText, wrapColorKeyWithVar(colorKey));
         currentLine = fixMissingBracket(currentLine, lineBeforeRawCssChange);
         currentLine = addMissingColon(currentLine);
@@ -118,15 +117,19 @@ public class DynamicCss {
     for (Entry<String, CssModel> colorEntry : allColors.entrySet()) {
       
       CssModel currCssModel = colorEntry.getValue();
-
       String key = currCssModel.getColorKey().replace(";", "").trim();
       String value = currCssModel.getColorValue().replace(";", "").trim();
+      
+      
+      
       // System.out.println("value --- "+value);
       if (value.startsWith("rgba") && value.endsWith(")") && !isBracketBalanced(value)) {
         value = value.substring(0, value.length() - 2);
       }
-
-      tempVarColorsBuffer.append(key + " :" + value + ";"+"  /* "+currCssModel.getColorCount()+" */  " + LINE_BREAK);
+      
+      currCssModel.setColorKey(key);
+      currCssModel.setColorValue(value);
+      tempVarColorsBuffer.append(currCssModel.toString() + LINE_BREAK);
     }
 
     tempVarColorsBuffer.append("}" + LINE_BREAK);

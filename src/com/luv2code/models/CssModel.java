@@ -65,7 +65,7 @@ public class CssModel {
   
   @Override
   public String toString() {
-    return colorKey+ ":"+ colorValue + "/* "+colorCount+" */";
+    return colorKey+ " : "+ colorValue +" ; "+ " /* "+colorCount+" */ ";
   }
   
   
