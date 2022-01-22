@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
@@ -19,8 +20,8 @@ public class DynamicCss {
   public static String LINE_BREAK;
   public static Integer NEW_COLOR_INDEX;
   public static String COLOR_PREFIX;
-  public static StringBuffer  tempColorsBuffer;
-
+  public static StringBuffer  tempVarColorsBuffer;
+  public static HashMap<String , Integer> colorCount;
   
   FileReader fileReader;
   BufferedReader bufferedReader;
@@ -37,7 +38,7 @@ public class DynamicCss {
     LINE_BREAK = Constants.LINE_BREAK;
     allColors = new LinkedHashMap<String, String>();
     newCssBuilder = new StringBuilder();
-    tempColorsBuffer = new StringBuffer();
+    tempVarColorsBuffer = new StringBuffer();
     NEW_COLOR_INDEX=1;
     COLOR_PREFIX="--color_";
   }
@@ -60,7 +61,7 @@ public class DynamicCss {
       fileReader = new FileReader(READ_CSS_PATH);
       bufferedReader = new BufferedReader(fileReader);
       appendNewCssToBuilder();
-      appendRootVariablesToBuilder();
+      appendVarToNewCss();
       bufferedReader.close();
       fileReader.close();
 
@@ -74,7 +75,7 @@ public class DynamicCss {
       fileWriter = new FileWriter(WRITE_CSS_PATH);
       bufferedWriter = new BufferedWriter(fileWriter);
       bufferedWriter.write(newCssBuilder.toString());
-      tempColorsBuffer.setLength(0);
+      tempVarColorsBuffer.setLength(0);
       newCssBuilder.setLength(0);
       bufferedWriter.close();
       fileWriter.close();
@@ -91,6 +92,7 @@ public class DynamicCss {
       addMissingColor(colorFoundInText);
 
       if (!isNull(colorFoundInText) && isNull(allColors.get(colorFoundInText))) {
+//        create hashmap which keep track of color count
         String lineBeforeRawCssChange = currentLine;
         currentLine = currentLine.replace(colorFoundInText, wrapColorKeyWithVar(allColors.get(colorFoundInText)));
         currentLine = fixMissingBracket(currentLine,lineBeforeRawCssChange);
@@ -102,8 +104,8 @@ public class DynamicCss {
     }
   }
 
-  public void appendRootVariablesToBuilder() {    
-    tempColorsBuffer.append(":root{" + LINE_BREAK);
+  public void appendVarToNewCss() {    
+    tempVarColorsBuffer.append(":root{" + LINE_BREAK);
 
     for (Entry<String, String> colorEntry :  allColors.entrySet()) {
       String value = colorEntry.getKey().replace(";", "").trim();
@@ -113,11 +115,11 @@ public class DynamicCss {
         value=value.substring(0 , value.length()-2);
       }
       
-      tempColorsBuffer.append(key + " :" + value + ";" + LINE_BREAK);
+      tempVarColorsBuffer.append(key + " :" + value + ";" + LINE_BREAK);
     }
     
-    tempColorsBuffer.append("}" + LINE_BREAK);
-    newCssBuilder.insert(0 ,tempColorsBuffer);
+    tempVarColorsBuffer.append("}" + LINE_BREAK);
+    newCssBuilder.insert(0 ,tempVarColorsBuffer);
 
   }
   
