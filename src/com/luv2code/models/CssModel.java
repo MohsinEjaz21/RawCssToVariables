@@ -47,6 +47,8 @@ public class CssModel {
   public void setColorValue(String colorValue) {
     this.colorValue = colorValue;
   }
+  
+  
 
   public int getColorCount() {
     return colorCount;
@@ -56,6 +58,11 @@ public class CssModel {
     this.colorCount = colorCount;
   }
 
+  public void incColorCount(int count) {
+    this.colorCount = count++;
+  }
+
+  
   @Override
   public String toString() {
     return colorKey+ ":"+ colorValue;

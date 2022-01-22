@@ -10,6 +10,8 @@ import java.util.Map.Entry;
 
 import com.luv2code.common.Constants;
 import com.luv2code.common.RegexUtils;
+import com.luv2code.models.CssModel;
+
 import static com.luv2code.common.Utils.*;
 import static com.luv2code.common.BalancedBrackets.*;
 
@@ -20,35 +22,35 @@ public class DynamicCss {
   public static String LINE_BREAK;
   public static Integer NEW_COLOR_INDEX;
   public static String COLOR_PREFIX;
-  public static StringBuffer  tempVarColorsBuffer;
-  public static HashMap<String , Integer> colorCount;
-  
+  public static StringBuffer tempVarColorsBuffer;
+  public static HashMap<String, CssModel> colorCount;
+
   FileReader fileReader;
   BufferedReader bufferedReader;
 
   FileWriter fileWriter;
   BufferedWriter bufferedWriter;
 
-  LinkedHashMap<String, String> allColors;
+  LinkedHashMap<String, CssModel> allColors;
   StringBuilder newCssBuilder;
 
   public DynamicCss() {
     READ_CSS_PATH = "src/assets/read.css";
     WRITE_CSS_PATH = "src/assets/write.css";
     LINE_BREAK = Constants.LINE_BREAK;
-    allColors = new LinkedHashMap<String, String>();
+    allColors = new LinkedHashMap<String, CssModel>();
     newCssBuilder = new StringBuilder();
     tempVarColorsBuffer = new StringBuffer();
-    NEW_COLOR_INDEX=1;
-    COLOR_PREFIX="--color_";
+    NEW_COLOR_INDEX = 1;
+    COLOR_PREFIX = "--color_";
   }
 
-  public DynamicCss(String readPath , String writePath) {
+  public DynamicCss(String readPath, String writePath) {
     this();
     READ_CSS_PATH = readPath;
     WRITE_CSS_PATH = writePath;
   }
-  
+
   public static void main(String[] args) {
     DynamicCss classInstance = new DynamicCss();
     classInstance.readRawCss();
@@ -87,66 +89,87 @@ public class DynamicCss {
 
   public void appendNewCssToBuilder() throws IOException {
     String currentLine;
-    while ((currentLine = bufferedReader.readLine())!=null) {
+    while ((currentLine = bufferedReader.readLine()) != null) {
       String colorFoundInText = RegexUtils.findColorInText(currentLine);
       addMissingColor(colorFoundInText);
+      updateExistingColorCount(colorFoundInText);
 
-      if (!isNull(colorFoundInText) && isNull(allColors.get(colorFoundInText))) {
-//        create hashmap which keep track of color count
+      CssModel foundCssModel = allColors.get(colorFoundInText);
+
+      if (!isNull(colorFoundInText) && foundCssModel != null) {
+        // create hashmap which keep track of color count
+
         String lineBeforeRawCssChange = currentLine;
-        currentLine = currentLine.replace(colorFoundInText, wrapColorKeyWithVar(allColors.get(colorFoundInText)));
-        currentLine = fixMissingBracket(currentLine,lineBeforeRawCssChange);
+        String colorKey = allColors.get(colorFoundInText).getColorKey();
+
+        currentLine = currentLine.replace(colorFoundInText, wrapColorKeyWithVar(colorKey));
+        currentLine = fixMissingBracket(currentLine, lineBeforeRawCssChange);
         currentLine = addMissingColon(currentLine);
-        System.out.print("CurrentLine"+currentLine);
+        System.out.print("CurrentLine" + currentLine);
       }
       newCssBuilder.append(currentLine);
       newCssBuilder.append(LINE_BREAK);
     }
   }
 
-  public void appendVarToNewCss() {    
+  public void appendVarToNewCss() {
     tempVarColorsBuffer.append(":root{" + LINE_BREAK);
 
-    for (Entry<String, String> colorEntry :  allColors.entrySet()) {
-      String value = colorEntry.getKey().replace(";", "").trim();
-      String key = colorEntry.getValue().replace(";", "").trim();
-//      System.out.println("value --- "+value);
-      if(value.startsWith("rgba") && value.endsWith(")") && !isBracketBalanced(value) ) {
-        value=value.substring(0 , value.length()-2);
-      }
+    for (Entry<String, CssModel> colorEntry : allColors.entrySet()) {
       
-      tempVarColorsBuffer.append(key + " :" + value + ";" + LINE_BREAK);
+      CssModel currCssModel = colorEntry.getValue();
+
+      String key = currCssModel.getColorKey().replace(";", "").trim();
+      String value = currCssModel.getColorValue().replace(";", "").trim();
+      // System.out.println("value --- "+value);
+      if (value.startsWith("rgba") && value.endsWith(")") && !isBracketBalanced(value)) {
+        value = value.substring(0, value.length() - 2);
+      }
+
+      tempVarColorsBuffer.append(key + " :" + value + ";"+"  /* "+currCssModel.getColorCount()+" */  " + LINE_BREAK);
     }
-    
+
     tempVarColorsBuffer.append("}" + LINE_BREAK);
-    newCssBuilder.insert(0 ,tempVarColorsBuffer);
+    newCssBuilder.insert(0, tempVarColorsBuffer);
 
   }
-  
-  public String fixMissingBracket(String currentLine , String lineBeforeReplaceVars) {
+
+  public String fixMissingBracket(String currentLine, String lineBeforeReplaceVars) {
     currentLine = currentLine.replace(";", "");
-    boolean isLastCharBracket = (lineBeforeReplaceVars.lastIndexOf(")") > lineBeforeReplaceVars.length()-3) ;
+    boolean isLastCharBracket = (lineBeforeReplaceVars.lastIndexOf(")") > lineBeforeReplaceVars.length() - 3);
     boolean isContainsLinearGradient = lineBeforeReplaceVars.contains("linear-gradient");
-    if (isLastCharBracket && isContainsLinearGradient ) {
+    if (isLastCharBracket && isContainsLinearGradient) {
       currentLine = currentLine + ")";
     }
     return currentLine;
   }
-  
+
   public void addMissingColor(String colorFoundInText) {
-    if (!isNull(colorFoundInText) && isNull(allColors.get(colorFoundInText))) {
-      allColors.put(colorFoundInText, COLOR_PREFIX + NEW_COLOR_INDEX);
+    CssModel cssModel = allColors.get(colorFoundInText);
+    if (!isNull(colorFoundInText) && cssModel == null) {
+      int colorCount = 0;
+      String colorKey = COLOR_PREFIX + NEW_COLOR_INDEX;
+      allColors.put(colorFoundInText, new CssModel(colorKey, colorFoundInText, colorCount));
       NEW_COLOR_INDEX++;
     }
   }
 
+  public void updateExistingColorCount(String colorFoundInText) {
+    CssModel cssModel = allColors.get(colorFoundInText);
+    if (!isNull(colorFoundInText) && cssModel != null) {
+      cssModel.incColorCount(cssModel.getColorCount());
+      allColors.replace(colorFoundInText, cssModel);
+    }
+  }
+
+  
+
   public String addMissingColon(String currentLine) {
     return currentLine = currentLine.indexOf(";") > -1 ? currentLine : currentLine + ";";
   }
-  
-  public String wrapColorKeyWithVar(String str) {
-   return "var(" + str + ")";
-  }
- 
-}
 
+  public String wrapColorKeyWithVar(String str) {
+    return "var(" + str + ")";
+  }
+
+}
