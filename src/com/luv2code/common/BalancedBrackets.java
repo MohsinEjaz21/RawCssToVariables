@@ -32,7 +32,7 @@ public class BalancedBrackets {
     // elements from it and replace -1 at that
     // index of the string
     while (!brackets.empty()) {
-      stringBuffer.replace(brackets.peek(), 1, "-1");
+      stringBuffer.replace(brackets.peek(), 1, "-1"); 
       brackets.pop();
     }
 

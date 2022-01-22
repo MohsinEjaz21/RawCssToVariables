@@ -11,9 +11,15 @@ package com.luv2code.common;
       boolean isBlack =cssLine.indexOf("black")> 0;
       boolean isHexColor =cssLine.indexOf("#")> 0;
       boolean isContainsUrl =cssLine.indexOf("url")> -1;
-      boolean isRgb =cssLine.indexOf("rgb")> 0;
-            
-      if(isContainsUrl||!isNoBrace) {
+      boolean isRgb =cssLine.indexOf("rgb")> 0;      
+      boolean isGreaterThan =cssLine.indexOf(">")> 0;
+      boolean isContainHover =cssLine.indexOf(":hover")> 0;
+      boolean isContainsBracket =cssLine.indexOf("[")> 0;
+      boolean isContainDot =cssLine.indexOf(".")> 0;
+      boolean isContainRgb =cssLine.indexOf("rgb")> 0;
+
+
+      if(isContainsUrl||!isNoBrace || isGreaterThan || (isContainDot &&  !isContainRgb)) {
         return null;
       }
       
@@ -31,7 +37,7 @@ package com.luv2code.common;
       foundRgbColor = foundRgbColor.replace("!important","");     
       foundRgbColor = foundRgbColor.replaceAll(";", "").trim();     
 
-      return foundRgbColor;
+      return foundRgbColor; 
     }
      
   }

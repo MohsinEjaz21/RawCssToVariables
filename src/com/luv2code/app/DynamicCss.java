@@ -119,7 +119,6 @@ public class DynamicCss {
     tempVarColorsBuffer.append(":root{" + LINE_BREAK);
     
     List<CssModel> cssVarsObjList = new ArrayList<CssModel>(allColors.values());
-    
     Collections.sort(cssVarsObjList, new Comparator<CssModel>() {
       @Override
       public int compare(CssModel u1, CssModel u2) {
