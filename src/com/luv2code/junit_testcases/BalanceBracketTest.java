@@ -25,4 +25,12 @@ public class BalanceBracketTest {
       boolean result = BalancedBrackets.isBracketBalanced("{[()]}");
       assertThat(result).isTrue();
   }
+  
+  @Test
+  public void givenEvenLengthBalancedString_fixing_missing_bracket_shouldReturnTrue() {
+      boolean result = BalancedBrackets.isBracketBalanced("1px solid rgba(0,0,0,.12");
+      assertThat(result).isFalse();
+  }
+  
+  
 }

@@ -1,23 +1,16 @@
 package com.luv2code.app;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
-import com.luv2code.common.BalancedBrackets;
 import com.luv2code.common.Constants;
 import com.luv2code.common.RegexUtils;
 import static com.luv2code.common.Utils.*;
 import static com.luv2code.common.BalancedBrackets.*;
-import com.sun.prism.paint.Color;
-import javafx.scene.shape.Line;
 
 public class DynamicCss {
 
@@ -26,7 +19,8 @@ public class DynamicCss {
   public static String LINE_BREAK;
   public static Integer NEW_COLOR_INDEX;
   public static String COLOR_PREFIX;
-  
+  public static StringBuffer  tempColorsBuffer;
+
   
   FileReader fileReader;
   BufferedReader bufferedReader;
@@ -34,15 +28,16 @@ public class DynamicCss {
   FileWriter fileWriter;
   BufferedWriter bufferedWriter;
 
-  HashMap<String, String> allColors;
+  LinkedHashMap<String, String> allColors;
   StringBuilder newCssBuilder;
 
   public DynamicCss() {
     READ_CSS_PATH = "src/assets/read.css";
     WRITE_CSS_PATH = "src/assets/write.css";
     LINE_BREAK = Constants.LINE_BREAK;
-    allColors = new HashMap<String, String>();
+    allColors = new LinkedHashMap<String, String>();
     newCssBuilder = new StringBuilder();
+    tempColorsBuffer = new StringBuffer();
     NEW_COLOR_INDEX=1;
     COLOR_PREFIX="--color_";
   }
@@ -79,6 +74,8 @@ public class DynamicCss {
       fileWriter = new FileWriter(WRITE_CSS_PATH);
       bufferedWriter = new BufferedWriter(fileWriter);
       bufferedWriter.write(newCssBuilder.toString());
+      tempColorsBuffer.setLength(0);
+      newCssBuilder.setLength(0);
       bufferedWriter.close();
       fileWriter.close();
 
@@ -105,19 +102,23 @@ public class DynamicCss {
     }
   }
 
-  public void appendRootVariablesToBuilder() {
-    newCssBuilder.insert(0, "}" + LINE_BREAK);
-    for (Entry<String, String> colorEntry : allColors.entrySet()) {
+  public void appendRootVariablesToBuilder() {    
+    tempColorsBuffer.append(":root{" + LINE_BREAK);
+
+    for (Entry<String, String> colorEntry :  allColors.entrySet()) {
       String value = colorEntry.getKey().replace(";", "").trim();
       String key = colorEntry.getValue().replace(";", "").trim();
 //      System.out.println("value --- "+value);
-      if(value.startsWith("rgba") && value.endsWith(")") &&  !isBracketBalanced(value) ) {
+      if(value.startsWith("rgba") && value.endsWith(")") && !isBracketBalanced(value) ) {
         value=value.substring(0 , value.length()-2);
       }
       
-      newCssBuilder.insert(0, key + " :" + value + ";" + LINE_BREAK);
+      tempColorsBuffer.append(key + " :" + value + ";" + LINE_BREAK);
     }
-    newCssBuilder.insert(0, ":root{" + LINE_BREAK);
+    
+    tempColorsBuffer.append("}" + LINE_BREAK);
+    newCssBuilder.insert(0 ,tempColorsBuffer);
+
   }
   
   public String fixMissingBracket(String currentLine , String lineBeforeReplaceVars) {
